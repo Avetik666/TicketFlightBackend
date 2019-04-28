@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = process.cwd();
+const request = require('request');
 // const User = require(`${path}/models/users.js`);
 // const _ = require('lodash');
 const appId = '1a04733c';
@@ -12,14 +13,20 @@ const year = '2019';
 const month = '04';
 const day = '27';
 
-const request = `https://api.flightstats.com/flex/flightstatus/rest/v2/json/flight/status/${flightCode}/${flightNumber}/dep/${year}/${month}/${day}?appId=${appId}&appKey=${appKey}&utc=false`;
+const requestURL = `https://api.flightstats.com/flex/flightstatus/rest/v2/json/flight/status/${flightCode}/${flightNumber}/dep/${year}/${month}/${day}?appId=${appId}&appKey=${appKey}&utc=false`;
 
-console.log(request);
+// request.get(requestURL,function(err,res,body1){
+//     body1 = JSON.parse(body1);
+//     console.log(body1.request.airline.fsCode);
+// });
+
+
 router.get('flight', async function(req, res,next) {
-    const body = req.body;
+    let body = req.body;
     try {
-        const user = await User.login(body.username, body.password);
-        console.log(res.json());
+        request.get(requestURL,function(err,res,body1){
+            body = JSON.parse(body1);
+        });
         res.json();
     }
     catch (e) {

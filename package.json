@@ -19,8 +19,9 @@
   },
   "homepage": "https://github.com/Davit98/TicketFlightBackend#readme",
   "dependencies": {
-    "express": "^4.16.4",
-    "mongoose": "^5.5.4"
+    "mongoose": "^5.5.4",
+    "request": "^2.88.0",
+    "express": "^4.16.4"
   },
   "devDependencies": {
     "dotenv": "^7.0.0",
