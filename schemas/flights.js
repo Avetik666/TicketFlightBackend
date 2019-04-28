@@ -8,11 +8,11 @@ const FlightSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    flightID: {
+    flightId: {
         type: String,
         required: true,
         trim: true,
-        index: { unique: true },
+        index: { unique: true }
     },
     airline: {
         type: String,
@@ -37,3 +37,19 @@ const FlightSchema = new mongoose.Schema({
         trim: true
     }
 });
+
+FlightSchema.pre('save', function (next) {
+    next();
+});
+
+FlightSchema.statics.findByFlightId = function(flightId) {
+    return Flight.findOne({flightId});
+};
+
+FlightSchema.statics.findByFlightCodeAndArrivalDate = function(flightCode,arrivalDate) {
+    return Flight.findOne({flightCode: flightCode, arrivalDate: arrivalDate});
+};
+
+const Flight = mongoose.model('Flight', FlightSchema);
+
+module.exports = Flight;

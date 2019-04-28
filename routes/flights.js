@@ -17,7 +17,7 @@ const requestURL = `https://api.flightstats.com/flex/flightstatus/rest/v2/json/f
 
 // request.get(requestURL,function(err,res,body1){
 //     body1 = JSON.parse(body1);
-//     console.log(body1.request.airline.fsCode);
+//     console.log(body1.request);
 // });
 
 
