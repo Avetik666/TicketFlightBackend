@@ -31,6 +31,5 @@ AirportSchema.pre('save', function (next) {
     next();
 });
 
-const Airport = mongoose.model('Airport',AirportSchema);
-
-module.exports = Airport;
+const Airport = mongoose.model('Airport', AirportSchema);
+module.exports = {Airport, AirportSchema};
