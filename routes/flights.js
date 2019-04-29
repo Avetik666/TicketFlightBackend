@@ -1,9 +1,12 @@
 const express = require('express');
-const router = express.Router();
-const path = process.cwd();
 const request = require('request');
-// const User = require(`${path}/models/users.js`);
+
+const path = process.cwd();
+const Flight = require(`${path}/models/flights.js`);
+
+const router = express.Router();
 // const _ = require('lodash');
+
 const appId = '1a04733c';
 const appKey = '9707581d0840cc6b8ed9d61128915b0f';
 
@@ -20,16 +23,23 @@ const requestURL = `https://api.flightstats.com/flex/flightstatus/rest/v2/json/f
 //     console.log(body1.request);
 // });
 
+async function asyncRequest() {
+    return new Promise(resolve => (
+        request.get(requestURL, function (err, res, body) {
+            console.log(body);
+            console.log(typeof body);
+        resolve(JSON.parse(body));})
+        ));
+}
 
-router.get('flight', async function(req, res,next) {
-    let body = req.body;
+router.get('/', async function (req, res, next) {
     try {
-        request.get(requestURL,function(err,res,body1){
-            body = JSON.parse(body1);
-        });
+        const body = await asyncRequest();
+        console.log(body);
+        await Flight.createFlight(body);
         res.json();
-    }
-    catch (e) {
+
+    } catch (e) {
         next(e);
     }
 

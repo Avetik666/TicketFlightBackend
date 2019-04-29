@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const AirportResources = require('airport.resources');
-const Airport = require('schemas/airports');
+const AirportResources = require('./airport.resources.js');
+const Airport = require('./airports.js');
 
 const FlightSchema = new mongoose.Schema({
     flightCode: {
@@ -29,9 +29,9 @@ const FlightSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    departureAirport: Airport,
-    arrivalAirport: Airport,
-    airportResources: AirportResources,
+    departureAirport: Airport.AirportSchema,
+    arrivalAirport: Airport.AirportSchema,
+    airportResources: AirportResources.AirportResourceSchema,
     delay: {
         type: Number,
         trim: true

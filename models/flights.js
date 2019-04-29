@@ -1,17 +1,19 @@
 const path = process.cwd();
-const {AirportResource} = require(`${path}/schemas/airport.resources.js`);
-const {Airport} = require(`${path}/schemas/airports.js`);
-const {Flight} = require(`${path}/schemas/flights.js`);
+const Airport = require(`${path}/schemas/airports.js`);
+const Flight = require(`${path}/schemas/flights.js`);
+const AirportResource = require(`${path}/schemas/airport.resources.js`);
+
+
 
 async function createAirportResource(departureTerminal, departureGate, arrivalTerminal, arrivalGate, baggageClaim) {
-
-    const airportResource = new AirportResource({
+    const airportResource = new AirportResource.AirportResource({
         departureTerminal: departureTerminal,
         departureGate: departureGate,
         arrivalTerminal: arrivalTerminal,
         arrivalGate: arrivalGate,
         baggageClaim: baggageClaim
     });
+
     try {
         await airportResource.save();
         return airportResource;
@@ -21,7 +23,7 @@ async function createAirportResource(departureTerminal, departureGate, arrivalTe
 }
 
 async function createAirport(shortName, name, cityName, countryName, weatherURL) {
-    const airport = new Airport({
+    const airport = new Airport.Airport({
         shortName: shortName,
         name: name,
         cityName: cityName,
@@ -39,9 +41,9 @@ async function createAirport(shortName, name, cityName, countryName, weatherURL)
 async function createFlight(body) {
 
     const airportResource = await createAirportResource(
-        body.flightStatuses.airportResources.departureTerminal, body.flightStatuses.airportResources.departureGate,
-        body.flightStatuses.airportResources.arrivalTerminal,
-        body.flightStatuses.airportResources.arrivalGate, body.flightStatuses.airportResources.baggageClaim);
+        body.flightStatuses[0].airportResources.departureTerminal, body.flightStatuses.airportResources.departureGate,
+        body.flightStatuses[0].airportResources.arrivalTerminal,
+        body.flightStatuses[0].airportResources.arrivalGate, body.flightStatuses.airportResources.baggageClaim);
 
     const departureAirport = await createAirport(
         body.appendix.airports[0].fs,
@@ -81,4 +83,7 @@ async function createFlight(body) {
         throw err;
     }
 
+}
+module.exports = {
+    createFlight
 }
