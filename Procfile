@@ -1,1 +1,1 @@
-veb: node server.js
+web: node -r ./init/init.js server.j
