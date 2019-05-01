@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 
-dotenv.config({path: './env/.env'});
+// dotenv.config({path: './env/.env'});
 
-mongoose.connect(process.env.db_path, {
+mongoose.connect('mongodb+srv://Avetik:1a04733c@ticketflight1-9y2pq.mongodb.net/test?retryWrites=true', {
     useNewUrlParser: true,
     useFindAndModify: false,
     useCreateIndex: true,
