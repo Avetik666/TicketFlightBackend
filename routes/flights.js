@@ -19,6 +19,7 @@ async function asyncRequest(requestURL) {
         request.get(requestURL, function (err, res, body) {
                 const output = JSON.parse(body);
                 resolve(JSON.parse(body));
+                res(body);
             }
         )
     ));
@@ -38,6 +39,8 @@ router.get('/', async function (req, res, next) {
         let requestURL = `https://api.flightstats.com/flex/flightstatus/rest/v2/json/flight/status/${flightCode}/${flightNumber}/dep/${year}/${month}/${day}?appId=${appId}&appKey=${appKey}&utc=false`;
 
         const body = await asyncRequest(requestURL);
+        console.log(body);
+
         await Flight.createFlight(body);
         res.json();
 
