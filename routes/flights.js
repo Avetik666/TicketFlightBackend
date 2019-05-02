@@ -19,7 +19,6 @@ async function asyncRequest(requestURL) {
         request.get(requestURL, function (err, res, body) {
                 const output = JSON.parse(body);
                 resolve(JSON.parse(body));
-                res(body);
             }
         )
     ));
