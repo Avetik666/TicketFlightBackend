@@ -11,13 +11,8 @@ async function createAirportResource(departureTerminal, departureGate, arrivalTe
         arrivalGate: arrivalGate,
         baggageClaim: baggageClaim
     });
+    return airportResource;
 
-    try {
-        await airportResource.save();
-        return airportResource;
-    } catch (err) {
-        throw err;
-    }
 }
 
 async function createAirport(shortName, name, cityName, countryName, weatherURL) {
@@ -28,20 +23,17 @@ async function createAirport(shortName, name, cityName, countryName, weatherURL)
         countryName: countryName,
         weatherURL: weatherURL
     });
-    try {
-        await airport.save();
-        return airport;
-    } catch (err) {
-        throw err;
-    }
+    return airport;
 }
 
 async function createFlight(body) {
 
     const airportResource = await createAirportResource(
-        body.flightStatuses[0].airportResources.departureTerminal, body.flightStatuses[0].airportResources.departureGate,
+        body.flightStatuses[0].airportResources.departureTerminal,
+        body.flightStatuses[0].airportResources.departureGate,
         body.flightStatuses[0].airportResources.arrivalTerminal,
-        body.flightStatuses[0].airportResources.arrivalGate, body.flightStatuses[0].airportResources.baggageClaim
+        body.flightStatuses[0].airportResources.arrivalGate,
+        body.flightStatuses[0].airportResources.baggageClaim
     );
 
     const departureAirport = await createAirport(
@@ -58,29 +50,29 @@ async function createFlight(body) {
         body.appendix.airports[1].countryName,
         body.appendix.airports[1].weatherUrl
     );
-    let airline;
-    if (body.flightStatuses[0].carrierFsCode === body.appendix.airlines[0].fs) {
-        airline = body.appendix.airlines[0].name;
-    }
 
-    const flight = new Flight({
-        flightCode: body.flightStatuses[0].carrierFsCode + body.flightStatuses[0].flightNumber,
-        flightId: body.flightStatuses[0].flightId,
-        airline: airline,
-        departureDate: body.flightStatuses[0].departureDate.dateLocal,
-        arrivalDate: body.flightStatuses[0].arrivalDate.dateLocal,
-        departureAirport: departureAirport,
-        arrivalAirport: arrivalAirport,
-        airportResource: airportResource,
-        delay: body.flightStatuses[0].delays.arrivalGateDelayMinutes
-    });
     try {
+        const airline = body.appendix.airlines.find(x => x.fs === body.flightStatuses[0].carrierFsCode).name;
+
+        const flight = new Flight({
+            flightCode: body.flightStatuses[0].carrierFsCode + body.flightStatuses[0].flightNumber,
+            flightId: body.flightStatuses[0].flightId,
+            airline: airline,
+            departureDate: body.flightStatuses[0].departureDate.dateLocal,
+            arrivalDate: body.flightStatuses[0].arrivalDate.dateLocal,
+            departureAirport: departureAirport,
+            arrivalAirport: arrivalAirport,
+            airportResource: airportResource,
+            delay: (typeof body.flightStatuses[0].delays !== "undefined") ? body.flightStatuses[0].delays.arrivalGateDelayMinutes : 0
+        });
+
         await flight.save();
     } catch (err) {
         throw err;
     }
 
 }
+
 module.exports = {
     createFlight
 }
