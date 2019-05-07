@@ -4,26 +4,23 @@ const Flight = require(`${path}/schemas/flights.js`);
 const AirportResource = require(`${path}/schemas/airport.resources.js`);
 
 async function createAirportResource(departureTerminal, departureGate, arrivalTerminal, arrivalGate, baggageClaim) {
-    const airportResource = new AirportResource.AirportResource({
+    return new AirportResource.AirportResource({
         departureTerminal: departureTerminal,
         departureGate: departureGate,
         arrivalTerminal: arrivalTerminal,
         arrivalGate: arrivalGate,
         baggageClaim: baggageClaim
     });
-    return airportResource;
-
 }
 
 async function createAirport(shortName, name, cityName, countryName, weatherURL) {
-    const airport = new Airport.Airport({
+    return new Airport.Airport({
         shortName: shortName,
         name: name,
         cityName: cityName,
         countryName: countryName,
         weatherURL: weatherURL
     });
-    return airport;
 }
 
 async function createFlight(body) {

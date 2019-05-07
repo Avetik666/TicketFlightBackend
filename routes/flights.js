@@ -9,11 +9,6 @@ const router = express.Router();
 const appId = '1a04733c';
 const appKey = '9707581d0840cc6b8ed9d61128915b0f';
 
-// request.get(requestURL,function(err,res,body1){
-//     body1 = JSON.parse(body1);
-//     console.log(body1.request);
-// });
-
 async function asyncRequest(requestURL) {
     return new Promise((resolve, reject) => (
         request.get(requestURL, function (err, res, body) {
