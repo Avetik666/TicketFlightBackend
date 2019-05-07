@@ -49,7 +49,7 @@ async function createFlight(body) {
     );
 
     try {
-        const airline = body.appendix.airlines.find(x => x.fs === body.flightStatuses[0].carrierFsCode).name;
+        const airline = body.appendix.airlines.find(x => x.fs === body.request.airline.fsCode).name;
 
         const flight = new Flight({
             flightCode: body.flightStatuses[0].carrierFsCode + body.flightStatuses[0].flightNumber,
