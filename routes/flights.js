@@ -30,11 +30,12 @@ router.get('/', async function (req, res, next) {
 
         const body = await asyncRequest(requestURL);
         try {
-            await Flight.createFlight(body);
+            // console.log(body);
+            res.json(await Flight.createFlight(body));
         } catch (e) {
             console.log(e.message);
         }
-        res.json(body);
+        // res.json(body);
 
     } catch (e) {
         next(e);

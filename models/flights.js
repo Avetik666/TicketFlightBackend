@@ -33,19 +33,22 @@ async function createFlight(body) {
         body.flightStatuses[0].airportResources.baggageClaim
     );
 
+    const departureAirportFsCode = body.flightStatuses[0].departureAirportFsCode ;
     const departureAirport = await createAirport(
-        body.appendix.airports[0].fs,
-        body.appendix.airports[0].name,
-        body.appendix.airports[0].city,
-        body.appendix.airports[0].countryName,
-        body.appendix.airports[0].weatherUrl
+        body.appendix.airports.find(x=> x.fs === departureAirportFsCode).fs,
+        body.appendix.airports.find(x=> x.fs === departureAirportFsCode).name,
+        body.appendix.airports.find(x=> x.fs === departureAirportFsCode).city,
+        body.appendix.airports.find(x=> x.fs === departureAirportFsCode).countryName,
+        body.appendix.airports.find(x=> x.fs === departureAirportFsCode).weatherUrl
     );
+
+    const arrivalAirportFsCode = body.flightStatuses[0].arrivalAirportFsCode;
     const arrivalAirport = await createAirport(
-        body.appendix.airports[1].fs,
-        body.appendix.airports[1].name,
-        body.appendix.airports[1].city,
-        body.appendix.airports[1].countryName,
-        body.appendix.airports[1].weatherUrl
+        body.appendix.airports.find(x=> x.fs === arrivalAirportFsCode).fs,
+        body.appendix.airports.find(x=> x.fs === arrivalAirportFsCode).name,
+        body.appendix.airports.find(x=> x.fs === arrivalAirportFsCode).city,
+        body.appendix.airports.find(x=> x.fs === arrivalAirportFsCode).countryName,
+        body.appendix.airports.find(x=> x.fs === arrivalAirportFsCode).weatherUrl
     );
 
     try {
@@ -64,6 +67,7 @@ async function createFlight(body) {
         });
 
         await flight.save();
+        return flight;
     } catch (err) {
         throw err;
     }
@@ -72,4 +76,4 @@ async function createFlight(body) {
 
 module.exports = {
     createFlight
-}
+};
