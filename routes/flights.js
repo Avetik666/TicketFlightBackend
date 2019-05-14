@@ -3,6 +3,7 @@ const request = require('request');
 
 const path = process.cwd();
 const Flight = require(`${path}/models/flights.js`);
+const {FlightAlreadyExists} = require(`${path}/errors/errors.js`);
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ async function asyncRequest(requestURL) {
 }
 
 router.get('/', async function (req, res, next) {
+    let body;
     try {
         const flightCode = req.query.flightCode;
         const flightNumber = req.query.flightNumber;
@@ -28,16 +30,14 @@ router.get('/', async function (req, res, next) {
         const day = req.query.day;
         let requestURL = `https://api.flightstats.com/flex/flightstatus/rest/v2/json/flight/status/${flightCode}/${flightNumber}/dep/${year}/${month}/${day}?appId=${appId}&appKey=${appKey}&utc=false`;
 
-        const body = await asyncRequest(requestURL);
-        try {
-            // console.log(body);
-            res.json(await Flight.createFlight(body));
-        } catch (e) {
-            console.log(e.message);
-        }
-        // res.json(body);
-
+        body = await asyncRequest(requestURL);
+        const response = await Flight.createFlight(body);
+        res.json(response);
     } catch (e) {
+        if(e instanceof FlightAlreadyExists){
+            const response = await Flight.getFlight(body.flightStatuses[0].flightId);
+            res.json(response);
+        }
         next(e);
     }
 
