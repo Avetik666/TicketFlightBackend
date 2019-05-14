@@ -41,14 +41,19 @@ async function createFlight(body) {
     if (flight) {
         throw new FlightAlreadyExists(flightId);
     } else {
+        let airportResource;
         const airportRes = body.flightStatuses[0].airportResources;
-        const airportResource = await createAirportResource(
-            airportRes.departureTerminal,
-            airportRes.departureGate,
-            airportRes.arrivalTerminal,
-            airportRes.arrivalGate,
-            airportRes.baggageClaim
-        );
+        if(typeof airportRes !== "undefined"){
+            airportResource = await createAirportResource(
+                airportRes.departureTerminal,
+                airportRes.departureGate,
+                airportRes.arrivalTerminal,
+                airportRes.arrivalGate,
+                airportRes.baggageClaim
+            );
+        }else{
+            airportResource = null;
+        }
 
         const departureAirportFsCode = body.flightStatuses[0].departureAirportFsCode;
         const depAirport = body.appendix.airports.find(x => x.fs === departureAirportFsCode);
