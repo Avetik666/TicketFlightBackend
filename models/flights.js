@@ -33,17 +33,40 @@ async function createAirport(shortName, name, cityName, countryName, weatherURL)
     });
 }
 
+async function compare(body, flight) {
+
+    const airportRes = body.flightStatuses[0].airportResources;
+    const delay = (typeof body.flightStatuses[0].delays !== "undefined") ? body.flightStatuses[0].delays.arrivalGateDelayMinutes : 0;
+
+    if (typeof airportRes !== "undefined" &&
+        (airportRes.departureTerminal != flight.airportResource.departureTerminal
+            || airportRes.departureGate != flight.airportResource.departureGate
+            || airportRes.arrivalTerminal != flight.airportResource.arrivalTerminal
+            || airportRes.arrivalGate != flight.airportResource.arrivalGate
+            || airportRes.baggageClaim != flight.airportResource.baggageClaim)) {
+        Flight.updateOne({flightId: flight.flightId}, {$set: {'airportResource': airportRes}}, function (err) {
+            if (err) throw err;
+        });
+
+    } else if (delay != flight.delay) {
+        Flight.updateOne({flightId: flight.flightId}, {$set: {'delay': delay}}, function (err) {
+            if(err) throw err;
+        });
+    }
+}
+
 async function createFlight(body) {
 
     const flightId = body.flightStatuses[0].flightId;
     const flight = await Flight.findOne({flightId});
 
     if (flight) {
+        await compare(body,flight);
         throw new FlightAlreadyExists(flightId);
     } else {
         let airportResource;
         const airportRes = body.flightStatuses[0].airportResources;
-        if(typeof airportRes !== "undefined"){
+        if (typeof airportRes !== "undefined") {
             airportResource = await createAirportResource(
                 airportRes.departureTerminal,
                 airportRes.departureGate,
@@ -51,7 +74,7 @@ async function createFlight(body) {
                 airportRes.arrivalGate,
                 airportRes.baggageClaim
             );
-        }else{
+        } else {
             airportResource = null;
         }
 
