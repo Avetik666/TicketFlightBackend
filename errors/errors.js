@@ -12,7 +12,6 @@ class FlightNotFound extends Error {
     }
 }
 
-
 module.exports = {
     FlightAlreadyExists,
     FlightNotFound
