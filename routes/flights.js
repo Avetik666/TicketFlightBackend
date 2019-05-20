@@ -54,4 +54,10 @@ router.get('/:flightId', async function(req, res, next) {
     }
 });
 
+router.get('/get/all', async function (req,res,next) {
+   const flights = await Flight.getAllFlights();
+   res.json(flights);
+});
+
+
 module.exports = router;

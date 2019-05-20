@@ -12,6 +12,10 @@ async function getFlight(flightId) {
     return flight;
 }
 
+async function getAllFlights() {
+    return await Flight.find();
+}
+
 async function createAirportResource(departureTerminal, departureGate, arrivalTerminal, arrivalGate, baggageClaim) {
     return new AirportResource.AirportResource({
         departureTerminal: departureTerminal,
@@ -123,5 +127,6 @@ async function createFlight(body) {
 
 module.exports = {
     createFlight,
-    getFlight
+    getFlight,
+    getAllFlights
 };
