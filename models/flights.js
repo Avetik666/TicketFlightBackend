@@ -5,13 +5,12 @@ const AirportResource = require(`${path}/schemas/airport.resources.js`);
 const {FlightAlreadyExists, FlightNotFound} = require(`${path}/errors/errors.js`);
 
 async function getFlight(flightId) {
-    const user = await Flight.findByFlightId(flightId);
-    if (!user) {
+    const flight = await Flight.findByFlightId(flightId);
+    if (!flight) {
         throw new FlightNotFound(flightId);
     }
-    return user;
+    return flight;
 }
-
 
 async function createAirportResource(departureTerminal, departureGate, arrivalTerminal, arrivalGate, baggageClaim) {
     return new AirportResource.AirportResource({
@@ -39,16 +38,16 @@ async function compare(body, flight) {
     const delay = (typeof body.flightStatuses[0].delays !== "undefined") ? body.flightStatuses[0].delays.arrivalGateDelayMinutes : 0;
 
     if (typeof airportRes !== "undefined" &&
-        (airportRes.departureTerminal != flight.airportResource.departureTerminal
-            || airportRes.departureGate != flight.airportResource.departureGate
-            || airportRes.arrivalTerminal != flight.airportResource.arrivalTerminal
-            || airportRes.arrivalGate != flight.airportResource.arrivalGate
-            || airportRes.baggageClaim != flight.airportResource.baggageClaim)) {
+        (airportRes.departureTerminal !== flight.airportResource.departureTerminal
+            || airportRes.departureGate !== flight.airportResource.departureGate
+            || airportRes.arrivalTerminal !== flight.airportResource.arrivalTerminal
+            || airportRes.arrivalGate !== flight.airportResource.arrivalGate
+            || airportRes.baggageClaim !== flight.airportResource.baggageClaim)) {
         Flight.updateOne({flightId: flight.flightId}, {$set: {'airportResource': airportRes}}, function (err) {
             if (err) throw err;
         });
 
-    } else if (delay != flight.delay) {
+    } else if (delay !== flight.delay) {
         Flight.updateOne({flightId: flight.flightId}, {$set: {'delay': delay}}, function (err) {
             if(err) throw err;
         });
