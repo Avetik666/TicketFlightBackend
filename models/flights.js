@@ -36,6 +36,10 @@ async function createAirport(shortName, name, cityName, countryName, weatherURL)
     });
 }
 
+async function deleteFlight(flightId) {
+    return await Flight.deleteOne({flightId});
+}
+
 async function compare(body, flight) {
 
     const airportRes = body.flightStatuses[0].airportResources;
@@ -53,20 +57,20 @@ async function compare(body, flight) {
 
     } else if (delay !== flight.delay) {
         Flight.updateOne({flightId: flight.flightId}, {$set: {'delay': delay}}, function (err) {
-            if(err) throw err;
+            if (err) throw err;
         });
     }
 }
 
 async function createFlight(body) {
 
-    if(!body.flightStatuses[0]) throw new FlightDoesNotExist(body.request.airline.fsCode + body.request.flight.requested);
+    if (!body.flightStatuses[0]) throw new FlightDoesNotExist(body.request.airline.fsCode + body.request.flight.requested);
 
     const flightId = body.flightStatuses[0].flightId;
     const flight = await Flight.findOne({flightId});
 
     if (flight) {
-        await compare(body,flight);
+        await compare(body, flight);
         throw new FlightAlreadyExists(flightId);
     } else {
         let airportResource;
@@ -130,5 +134,6 @@ async function createFlight(body) {
 module.exports = {
     createFlight,
     getFlight,
-    getAllFlights
+    getAllFlights,
+    deleteFlight
 };

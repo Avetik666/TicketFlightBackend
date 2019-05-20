@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 app.use('/flight', require('./routes/flights.js'));
 
-app.use(function (err, req, res) {
+app.use(function (err, req, res, next) {
 
     if( err instanceof FlightAlreadyExists) return console.log(err.stack);
     if( err instanceof FlightDoesNotExist) return res.status(404).send(err.message);
