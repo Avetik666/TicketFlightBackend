@@ -2,7 +2,7 @@ const path = process.cwd();
 const Airport = require(`${path}/schemas/airports.js`);
 const Flight = require(`${path}/schemas/flights.js`);
 const AirportResource = require(`${path}/schemas/airport.resources.js`);
-const {FlightAlreadyExists, FlightNotFound} = require(`${path}/errors/errors.js`);
+const {FlightAlreadyExists, FlightNotFound, FlightDoesNotExist} = require(`${path}/errors/errors.js`);
 
 async function getFlight(flightId) {
     const flight = await Flight.findByFlightId(flightId);
@@ -59,6 +59,8 @@ async function compare(body, flight) {
 }
 
 async function createFlight(body) {
+
+    if(!body.flightStatuses[0]) throw new FlightDoesNotExist(body.request.airline.fsCode + body.request.flight.requested);
 
     const flightId = body.flightStatuses[0].flightId;
     const flight = await Flight.findOne({flightId});

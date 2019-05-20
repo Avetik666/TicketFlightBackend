@@ -3,7 +3,7 @@ const request = require('request');
 
 const path = process.cwd();
 const Flight = require(`${path}/models/flights.js`);
-const {FlightAlreadyExists} = require(`${path}/errors/errors.js`);
+const {FlightAlreadyExists, FlightDoesNotExist} = require(`${path}/errors/errors.js`);
 const _ = require('lodash');
 
 const router = express.Router();
@@ -35,7 +35,7 @@ router.get('/', async function (req, res, next) {
         const response = await Flight.createFlight(body);
         res.json(response);
     } catch (e) {
-        if(e instanceof FlightAlreadyExists){
+        if (e instanceof FlightAlreadyExists) {
             const response = await Flight.getFlight(body.flightStatuses[0].flightId);
             res.json(response);
         }
@@ -44,20 +44,18 @@ router.get('/', async function (req, res, next) {
 
 });
 
-router.get('/:flightId', async function(req, res, next) {
-    try{
+router.get('/:flightId', async function (req, res, next) {
+    try {
         const flight = await Flight.getFlight(req.params.flightId);
         res.json(flight);
-    }
-    catch(err){
+    } catch (err) {
         next(err);
     }
 });
 
-router.get('/get/all', async function (req,res,next) {
-   const flights = await Flight.getAllFlights();
-   res.json(flights);
+router.get('/get/all', async function (req, res, next) {
+    const flights = await Flight.getAllFlights();
+    res.json(flights);
 });
-
 
 module.exports = router;

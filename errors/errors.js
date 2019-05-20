@@ -12,7 +12,15 @@ class FlightNotFound extends Error {
     }
 }
 
+class FlightDoesNotExist extends Error{
+    constructor (flightNumber){
+        super(`Flight with flight number ${flightNumber} does not exist! \nEnter valid flight number`);
+        this.name = "FlightDoesNotExist";
+    }
+}
+
 module.exports = {
     FlightAlreadyExists,
-    FlightNotFound
+    FlightNotFound,
+    FlightDoesNotExist
 };
