@@ -12,7 +12,6 @@ async function getFlight(flightId) {
     return flight;
 }
 
-
 async function createAirportResource(departureTerminal, departureGate, arrivalTerminal, arrivalGate, baggageClaim) {
     return new AirportResource.AirportResource({
         departureTerminal: departureTerminal,

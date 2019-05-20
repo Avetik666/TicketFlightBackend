@@ -4,6 +4,7 @@ const request = require('request');
 const path = process.cwd();
 const Flight = require(`${path}/models/flights.js`);
 const {FlightAlreadyExists} = require(`${path}/errors/errors.js`);
+const _ = require('lodash');
 
 const router = express.Router();
 
@@ -41,6 +42,16 @@ router.get('/', async function (req, res, next) {
         next(e);
     }
 
+});
+
+router.get('/:flightId', async function(req, res, next) {
+    try{
+        const flight = await Flight.getFlight(req.params.flightId);
+        res.json(flight);
+    }
+    catch(err){
+        next(err);
+    }
 });
 
 module.exports = router;
